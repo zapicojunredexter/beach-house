@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enhanced Scroll Animations
     const enhancedObserverOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -80px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     };
 
     const enhancedObserver = new IntersectionObserver(function(entries) {
@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const legacyElements = document.querySelectorAll('.amenity-card:not([class*="scale-in"]), .gallery-item:not([class*="fade-in"]), .contact-form:not([class*="slide-in"])');
     legacyElements.forEach(el => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
         
         const legacyObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
