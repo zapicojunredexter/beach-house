@@ -143,28 +143,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Scroll animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+    // Enhanced Scroll Animations
+    const enhancedObserverOptions = {
+        threshold: 0.15,
+        rootMargin: '0px 0px -80px 0px'
     };
 
-    const observer = new IntersectionObserver(function(entries) {
+    const enhancedObserver = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('visible');
+                // Optional: Unobserve after animation to improve performance
+                enhancedObserver.unobserve(entry.target);
             }
         });
-    }, observerOptions);
+    }, enhancedObserverOptions);
 
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll('.amenity-card, .gallery-item, .contact-form');
-    animateElements.forEach(el => {
+    // Observe all elements with animation classes
+    const animatedElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in');
+    animatedElements.forEach(element => {
+        enhancedObserver.observe(element);
+    });
+
+    // Legacy animation support for existing elements
+    const legacyElements = document.querySelectorAll('.amenity-card:not([class*="scale-in"]), .gallery-item:not([class*="fade-in"]), .contact-form:not([class*="slide-in"])');
+    legacyElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+        
+        const legacyObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    legacyObserver.unobserve(entry.target);
+                }
+            });
+        }, enhancedObserverOptions);
+        
+        legacyObserver.observe(el);
     });
 
     // Enhanced Parallax effect for video background
