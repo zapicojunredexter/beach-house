@@ -37,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
             navbar.classList.toggle('open');
             sidebarToggle.classList.toggle('open');
             mainContent.classList.toggle('sidebar-open');
+            
+            // Adjust booking widget position when sidebar opens/closes
+            const bookingWidget = document.getElementById('sticky-booking-widget');
+            if (bookingWidget) {
+                bookingWidget.classList.toggle('sidebar-adjusted');
+            }
         });
     } else {
         console.error('Sidebar toggle button not found!');
@@ -48,13 +54,67 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const isClickInsideSidebar = navbar.contains(event.target);
         const isClickOnToggle = sidebarToggle.contains(event.target);
+        const bookingWidget = document.getElementById('sticky-booking-widget');
+        const isClickOnBookingWidget = bookingWidget && bookingWidget.contains(event.target);
         
-        if (!isClickInsideSidebar && !isClickOnToggle && navbar.classList.contains('open')) {
+        if (!isClickInsideSidebar && !isClickOnToggle && !isClickOnBookingWidget && navbar.classList.contains('open')) {
             navbar.classList.remove('open');
             sidebarToggle.classList.remove('open');
             mainContent.classList.remove('sidebar-open');
+            if (bookingWidget) {
+                bookingWidget.classList.remove('sidebar-adjusted');
+            }
         }
     });
+
+    // Sticky Booking Widget Logic
+    const bookingWidget = document.getElementById('sticky-booking-widget');
+    const bookingWidgetClose = document.getElementById('booking-widget-close');
+    let bookingWidgetDismissed = false;
+
+    // Show/hide booking widget based on scroll position
+    function updateBookingWidgetVisibility() {
+        if (!bookingWidget || bookingWidgetDismissed) return;
+        
+        const scrollPosition = window.pageYOffset;
+        const heroHeight = window.innerHeight;
+        
+        // Show widget after scrolling past hero section (reduced threshold)
+        if (scrollPosition > heroHeight * 0.3) {
+            bookingWidget.classList.add('visible');
+        } else {
+            bookingWidget.classList.remove('visible');
+        }
+    }
+    
+    // Initial call to show widget if already scrolled
+    updateBookingWidgetVisibility();
+
+    // Close booking widget
+    if (bookingWidgetClose) {
+        bookingWidgetClose.addEventListener('click', function() {
+            bookingWidget.classList.remove('visible');
+            bookingWidgetDismissed = true;
+        });
+    }
+
+    // Add scroll listener for booking widget
+    window.addEventListener('scroll', updateBookingWidgetVisibility);
+
+    // Smooth scroll to contact section when booking button is clicked
+    const bookingBtn = bookingWidget?.querySelector('.booking-btn.primary');
+    if (bookingBtn) {
+        bookingBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const contactSection = document.querySelector('#contact');
+            if (contactSection) {
+                contactSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    }
 
     // Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
