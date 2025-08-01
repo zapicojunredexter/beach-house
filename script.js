@@ -199,46 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('scroll', requestParallaxUpdate);
 
-    // Romantic interaction effects
-    const romanticIcons = document.querySelectorAll('.romantic-icon');
-    romanticIcons.forEach(icon => {
-        icon.addEventListener('click', function() {
-            this.style.animation = 'none';
-            setTimeout(() => {
-                this.style.animation = 'romanticPulse 2.5s ease-in-out infinite';
-            }, 100);
-            
-            // Create floating heart effect
-            createFloatingHeart(this);
-        });
-    });
-    
-    function createFloatingHeart(element) {
-        const heart = document.createElement('div');
-        heart.innerHTML = '💕';
-        heart.style.position = 'absolute';
-        heart.style.fontSize = '1.5rem';
-        heart.style.color = '#ff9a56';
-        heart.style.pointerEvents = 'none';
-        heart.style.zIndex = '1000';
-        
-        const rect = element.getBoundingClientRect();
-        heart.style.left = rect.left + 'px';
-        heart.style.top = rect.top + 'px';
-        
-        document.body.appendChild(heart);
-        
-        // Animate floating heart
-        heart.animate([
-            { transform: 'translateY(0px) scale(1)', opacity: 1 },
-            { transform: 'translateY(-100px) scale(1.5)', opacity: 0 }
-        ], {
-            duration: 2000,
-            easing: 'ease-out'
-        }).addEventListener('finish', () => {
-            heart.remove();
-        });
-    }
+
 
     // Add loading animation
     window.addEventListener('load', function() {
