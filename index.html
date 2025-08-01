@@ -8,31 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Seaweed+Script&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-container">
-            <div class="tropical-loader">
-                <div class="palm-tree">
-                    <div class="trunk"></div>
-                    <div class="leaves">
-                        <div class="leaf leaf-1">🌴</div>
-                        <div class="leaf leaf-2">🌴</div>
-                        <div class="leaf leaf-3">🌴</div>
-                    </div>
-                </div>
-                <div class="waves">
-                    <div class="wave wave-1"></div>
-                    <div class="wave wave-2"></div>
-                    <div class="wave wave-3"></div>
-                </div>
-            </div>
-            <h2>Welcome to Golden Hour Paradise</h2>
-            <p>Preparing your sunrise to sunset escape...</p>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
-            </div>
-        </div>
-    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -54,13 +30,24 @@
         </div>
     </nav>
 
+    <main>
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="video-background">
+            <!-- Golden Hour Placeholder Background -->
+            <div class="video-placeholder">
+                <div class="golden-horizon"></div>
+                <div class="floating-elements">
+                    <div class="sunset-orb"></div>
+                    <div class="gentle-waves">
+                        <div class="wave-layer wave-1"></div>
+                        <div class="wave-layer wave-2"></div>
+                        <div class="wave-layer wave-3"></div>
+                    </div>
+                </div>
+            </div>
             <video id="hero-video" autoplay muted loop playsinline>
                 <source src="videos/beach_preview.mp4" type="video/mp4">
-                <!-- Fallback for browsers that don't support video -->
-                <div class="video-fallback"></div>
             </video>
             <div class="video-overlay"></div>
         </div>
@@ -96,9 +83,7 @@
                     </div>
                 </div>
                 <div class="about-image">
-                    <div class="image-placeholder">
-                        <span>Beach House Image</span>
-                    </div>
+                    <img src="images/beach_house.png" alt="Beautiful Saint Bernard Beach House overlooking the coastline" class="beach-house-img">
                 </div>
             </div>
         </div>
@@ -254,6 +239,7 @@
             </div>
         </div>
     </footer>
+    </main>
 
     <script src="script.js"></script>
 </body>

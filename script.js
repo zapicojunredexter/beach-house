@@ -1,69 +1,38 @@
-// Loading Screen and Video Management
+// Video Management with Placeholder Background
 document.addEventListener('DOMContentLoaded', function() {
-    const loadingScreen = document.getElementById('loading-screen');
     const heroVideo = document.getElementById('hero-video');
-    const videoBackground = document.querySelector('.video-background');
-    let videoLoaded = false;
-    let minLoadingTime = 2000; // Minimum loading time for UX
-    
-    // Show loading screen initially
-    loadingScreen.style.display = 'flex';
+    const videoPlaceholder = document.querySelector('.video-placeholder');
     
     // Video loading handler
     if (heroVideo) {
-        heroVideo.addEventListener('loadeddata', function() {
-            videoLoaded = true;
-            checkLoadingComplete();
-        });
-        
         heroVideo.addEventListener('error', function() {
-            console.log('Video failed to load, using fallback');
-            const fallback = document.querySelector('.video-fallback');
-            if (fallback) {
-                fallback.style.display = 'block';
+            console.log('Video failed to load, showing placeholder background');
+            // Show placeholder only if video fails
+            if (videoPlaceholder) {
+                videoPlaceholder.classList.add('show');
             }
-            videoLoaded = true;
-            checkLoadingComplete();
         });
         
         // Preload video
         heroVideo.load();
-    } else {
-        videoLoaded = true;
-        checkLoadingComplete();
-    }
-    
-    // Minimum loading time
-    setTimeout(() => {
-        minLoadingTime = 0;
-        checkLoadingComplete();
-    }, 2000);
-    
-    function checkLoadingComplete() {
-        if (videoLoaded && minLoadingTime === 0) {
-            loadingScreen.classList.add('hidden');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 800);
-        }
     }
 
     // Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
+    const navbar = document.querySelector('.navbar');
     const navLinks = document.querySelectorAll('.nav-menu a');
 
     // Toggle mobile menu
     hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
+        navbar.classList.toggle('active');
     });
 
     // Close mobile menu when clicking on a link
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
+            navbar.classList.remove('active');
         });
     });
 
@@ -73,7 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                const offsetTop = target.offsetTop - 70; // Account for fixed navbar
+                // Immediately update active state
+                const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+                navLinks.forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+                
+                const offsetTop = target.offsetTop; // No top navbar offset needed
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
@@ -178,14 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Navbar background on scroll
-        if (scrolled > 50) {
-            navbar.style.background = 'rgba(248, 242, 232, 0.95)';
-            navbar.style.boxShadow = '0 4px 20px rgba(107, 165, 165, 0.25)';
-        } else {
-            navbar.style.background = 'rgba(248, 242, 232, 0.9)';
-            navbar.style.boxShadow = '0 2px 20px rgba(107, 165, 165, 0.2)';
-        }
+        // Navbar is now a fixed sidebar, no need for scroll-based background changes
         
         ticking = false;
     }
@@ -199,12 +166,56 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('scroll', requestParallaxUpdate);
 
+    // Scroll Spy for active navigation
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+    
+    function updateActiveNavigation() {
+        let currentSection = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100; // Offset for better UX
+            const sectionBottom = sectionTop + section.offsetHeight;
+            const scrollPosition = window.pageYOffset;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+        
+        // Update navigation active states
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href').substring(1); // Remove # from href
+            if (href === currentSection) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Set home as active if at the very top
+        if (window.pageYOffset < 50) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            const homeLink = document.querySelector('.nav-menu a[href="#home"]');
+            if (homeLink) homeLink.classList.add('active');
+        }
+    }
+    
+    // Initialize active state on page load
+    updateActiveNavigation();
+    
+    // Set home as active by default if no other section is active
+    setTimeout(() => {
+        const activeLink = document.querySelector('.nav-menu a.active');
+        if (!activeLink) {
+            const homeLink = document.querySelector('.nav-menu a[href="#home"]');
+            if (homeLink) homeLink.classList.add('active');
+        }
+    }, 100);
+    
+    // Update active state on scroll
+    window.addEventListener('scroll', updateActiveNavigation);
 
 
-    // Add loading animation
-    window.addEventListener('load', function() {
-        document.body.classList.add('loaded');
-    });
 });
 
 // Utility function to check if element is in viewport
@@ -231,15 +242,6 @@ style.textContent = `
     
     .hamburger.active span:nth-child(3) {
         transform: rotate(45deg) translate(-5px, -6px);
-    }
-    
-    body.loaded {
-        opacity: 1;
-    }
-    
-    body {
-        opacity: 0;
-        transition: opacity 0.3s ease;
     }
 `;
 
