@@ -17,22 +17,68 @@ document.addEventListener('DOMContentLoaded', function() {
         heroVideo.load();
     }
 
-    // Mobile Menu Toggle
-    const hamburger = document.querySelector('.hamburger');
+    // Sidebar Toggle
+    const sidebarToggle = document.getElementById('sidebar-toggle');
     const navbar = document.querySelector('.navbar');
-    const navLinks = document.querySelectorAll('.nav-menu a');
+    const mainContent = document.querySelector('main');
+    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
 
-    // Toggle mobile menu
-    hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navbar.classList.toggle('active');
+    // Debug logging
+    console.log('Sidebar Toggle Button:', sidebarToggle);
+    console.log('Navbar:', navbar);
+    console.log('Main Content:', mainContent);
+
+    // Toggle sidebar visibility
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Toggle button clicked!');
+            navbar.classList.toggle('open');
+            sidebarToggle.classList.toggle('open');
+            mainContent.classList.toggle('sidebar-open');
+        });
+    } else {
+        console.error('Sidebar toggle button not found!');
+    }
+
+    // Close sidebar when clicking outside of it
+    document.addEventListener('click', function(event) {
+        if (!sidebarToggle) return; // Guard clause
+        
+        const isClickInsideSidebar = navbar.contains(event.target);
+        const isClickOnToggle = sidebarToggle.contains(event.target);
+        
+        if (!isClickInsideSidebar && !isClickOnToggle && navbar.classList.contains('open')) {
+            navbar.classList.remove('open');
+            sidebarToggle.classList.remove('open');
+            mainContent.classList.remove('sidebar-open');
+        }
     });
 
-    // Close mobile menu when clicking on a link
+    // Mobile Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+
+    // Toggle mobile menu
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navbar.classList.toggle('active');
+        });
+    }
+
+    // Close sidebar when clicking on a navigation link
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navbar.classList.remove('active');
+            // On mobile, close hamburger menu
+            if (hamburger) {
+                hamburger.classList.remove('active');
+                navbar.classList.remove('active');
+            }
+            // On desktop, optionally close sidebar (uncomment next lines if desired)
+            // navbar.classList.remove('open');
+            // sidebarToggle.classList.remove('open');
+            // mainContent.classList.remove('sidebar-open');
         });
     });
 
@@ -43,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 // Immediately update active state
-                const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
                 navLinks.forEach(link => link.classList.remove('active'));
                 this.classList.add('active');
                 
@@ -168,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Scroll Spy for active navigation
     const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
     
     function updateActiveNavigation() {
         let currentSection = '';
