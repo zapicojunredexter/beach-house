@@ -291,6 +291,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Scroll Spy for active navigation
     const sections = document.querySelectorAll('section[id]');
+    let previousSection = '';
+    let sidebarAutoOpened = false;
     
     function updateActiveNavigation() {
         let currentSection = '';
@@ -304,6 +306,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentSection = section.getAttribute('id');
             }
         });
+        
+        // Auto-open sidebar when scrolling from home to about
+        if (previousSection === 'home' && currentSection === 'about' && !sidebarAutoOpened) {
+            if (sidebarToggle && !navbar.classList.contains('open')) {
+                navbar.classList.add('open');
+                sidebarToggle.classList.add('open');
+                mainContent.classList.add('sidebar-open');
+                
+                // Adjust booking widget position when sidebar opens
+                const bookingWidget = document.getElementById('sticky-booking-widget');
+                if (bookingWidget) {
+                    bookingWidget.classList.add('sidebar-adjusted');
+                }
+                
+                sidebarAutoOpened = true;
+                console.log('Auto-opened sidebar when scrolling from home to about');
+            }
+        }
+        
+        // Reset auto-open flag when back to home
+        if (currentSection === 'home') {
+            sidebarAutoOpened = false;
+        }
         
         // Update navigation active states
         navLinks.forEach(link => {
@@ -320,6 +345,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const homeLink = document.querySelector('.nav-menu a[href="#home"]');
             if (homeLink) homeLink.classList.add('active');
         }
+        
+        // Update previous section
+        previousSection = currentSection;
     }
     
     // Initialize active state on page load
