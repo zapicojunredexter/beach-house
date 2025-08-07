@@ -38,11 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarToggle.classList.toggle('open');
             mainContent.classList.toggle('sidebar-open');
             
-            // Adjust booking widget position when sidebar opens/closes
-            const bookingWidget = document.getElementById('sticky-booking-widget');
-            if (bookingWidget) {
-                bookingWidget.classList.toggle('sidebar-adjusted');
-            }
+            // Don't adjust booking widget position to keep it consistent
+            // The widget will stay in its original position regardless of sidebar state
         });
     } else {
         console.error('Sidebar toggle button not found!');
@@ -61,9 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             navbar.classList.remove('open');
             sidebarToggle.classList.remove('open');
             mainContent.classList.remove('sidebar-open');
-            if (bookingWidget) {
-                bookingWidget.classList.remove('sidebar-adjusted');
-            }
+            // No need to adjust booking widget since we're not moving it anymore
         }
     });
 
@@ -314,11 +309,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 sidebarToggle.classList.add('open');
                 mainContent.classList.add('sidebar-open');
                 
-                // Adjust booking widget position when sidebar opens
-                const bookingWidget = document.getElementById('sticky-booking-widget');
-                if (bookingWidget) {
-                    bookingWidget.classList.add('sidebar-adjusted');
-                }
+                // Don't adjust booking widget position for auto-open to avoid repositioning
+                // The widget will stay in its original position
                 
                 sidebarAutoOpened = true;
                 console.log('Auto-opened sidebar when scrolling from home to about');
